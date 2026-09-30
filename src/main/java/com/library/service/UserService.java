@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import com.library.dto.user.UserCreateRequest;
 import com.library.dto.user.UserResponse;
 import com.library.entity.User;
-import com.library.exception.EmailAlreadyExistsException;
 import com.library.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ public class UserService {
 		// check wheather email already exist
 		if(userRepository.existsByEmail(request.getEmail()))
 		{
-			throw new EmailAlreadyExistsException("Email already exists!");
+			throw new RuntimeException("Email already exists!");
 		}
 		
 		User user = new User();
