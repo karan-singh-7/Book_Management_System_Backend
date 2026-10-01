@@ -2,6 +2,7 @@ package com.library.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -43,6 +44,30 @@ public class SecurityConfig {
                     "/api/auth/login"
                 ).permitAll()
 
+                // ADMIN only
+                .requestMatchers(
+                    HttpMethod.POST,
+                    "/api/books"
+                ).hasRole("ADMIN")
+
+                .requestMatchers(
+                    HttpMethod.PUT,
+                    "/api/books/**"
+                ).hasRole("ADMIN")
+
+                .requestMatchers(
+                    HttpMethod.DELETE,
+                    "/api/books/**"
+                ).hasRole("ADMIN")
+
+                .requestMatchers(
+                    HttpMethod.PATCH,
+                    "/api/books/**"
+                ).hasRole("ADMIN")
+
+                // all adimn api
+                .requestMatchers("/api/admin/**")
+                .hasRole("ADMIN")
                 // Everything else requires authentication
                 .anyRequest().authenticated()
             )

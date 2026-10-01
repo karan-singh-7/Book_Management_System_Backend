@@ -21,6 +21,9 @@ public interface BorrowRepository extends JpaRepository<Borrowing, Long> {
 	
 	List<Borrowing> findByUserIdAndStatus(Long userId, BorrowingStatus status);
 	
+	
+	List<Borrowing> findByStatus(BorrowingStatus status);
+	
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT b FROM borrowings b WHERE b.id = :id")
 	Optional<Borrowing> findByIdForUpdate(@Param("id") Long id);
