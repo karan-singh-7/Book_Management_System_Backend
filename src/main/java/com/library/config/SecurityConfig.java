@@ -31,6 +31,8 @@ public class SecurityConfig {
 
         http
             .csrf(csrf -> csrf.disable())
+            
+            .cors(cors -> {})
 
             .sessionManagement(session ->
                 session.sessionCreationPolicy(
@@ -43,6 +45,11 @@ public class SecurityConfig {
                     "/api/auth/register",
                     "/api/auth/login"
                 ).permitAll()
+                
+                .requestMatchers(
+                	    "/swagger-ui/**",
+                	    "/v3/api-docs/**"
+                	).permitAll()
 
                 // ADMIN only
                 .requestMatchers(

@@ -1,9 +1,11 @@
 package com.library.service;
 
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Date;
 
+import javax.crypto.SecretKey;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -13,18 +15,18 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY =
-            "library-management-system-secret-key-2026";
+    private  final SecretKey key;
+    private  final long expirationTime;
 
-    private static final long EXPIRATION_TIME =
-            1000 * 60 * 60; // 1 hour
 
-    private final Key key;
-
-    public JwtService() {
-        this.key = Keys.hmacShaKeyFor(
-                SECRET_KEY.getBytes(StandardCharsets.UTF_8)
-        );
+    public JwtService(
+    		               @Value("${jwt.secret}") String secret, 
+    		               @Value("${jwt.expiration}") long expirationTime
+    		             )
+    
+    {
+    	  this.expirationTime = expirationTime;
+    	  this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
     // Generate JWT
@@ -33,7 +35,7 @@ public class JwtService {
         Date now = new Date();
 
         Date expiration =
-                new Date(now.getTime() + EXPIRATION_TIME);
+                new Date(now.getTime() + expirationTime);
 
         return Jwts.builder()
                 .subject(email)
